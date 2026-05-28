@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How to Vibe Code — a personal reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#f3ecd9;
+    --paper-deep:#ebe2c8;
+    --ink:#1a2238;
+    --ink-soft:#3a4258;
+    --rust:#a8442a;
+    --rust-soft:#c46b4f;
+    --rule:#c9bf9e;
+    --highlight:#fbe6a2;
+    --code-bg:#231a14;
+    --code-fg:#f3ecd9;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:"EB Garamond",Georgia,serif;font-size:18px;line-height:1.55}
+  body{
+    background-image:
+      linear-gradient(var(--paper) 0 0),
+      radial-gradient(circle at 20% 0%, rgba(168,68,42,0.05), transparent 40%),
+      radial-gradient(circle at 90% 100%, rgba(26,34,56,0.06), transparent 50%),
+      repeating-linear-gradient(0deg, rgba(26,34,56,0.025) 0 1px, transparent 1px 32px);
+    background-attachment: fixed;
+    min-height:100vh;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:64px 28px 96px;position:relative}
+  /* HEADER */
+  header{border-bottom:2px solid var(--ink);padding-bottom:28px;margin-bottom:48px;position:relative}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--rust);margin-bottom:14px}
+  h1{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(40px,7vw,72px);line-height:.95;margin:0 0 14px;letter-spacing:-.02em}
+  h1 em{font-style:italic;font-weight:400;color:var(--rust)}
+  .lede{font-family:"Fraunces",serif;font-style:italic;font-size:22px;color:var(--ink-soft);max-width:580px;margin:0}
+  .stamp{position:absolute;top:-6px;right:0;font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--rust);border:1.5px solid var(--rust);padding:6px 10px;transform:rotate(3deg);letter-spacing:.15em;line-height:1.2;text-align:center}
+  /* DISCLAIMER */
+  .disclaimer{background:var(--paper-deep);border-left:4px solid var(--rust);padding:18px 22px;margin:0 0 56px;font-style:italic;color:var(--ink)}
+  .disclaimer strong{font-style:normal;font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.15em;text-transform:uppercase;display:block;margin-bottom:6px;color:var(--rust);font-weight:600}
+  /* SECTION ANCHOR / TOC */
+  .toc{font-family:"JetBrains Mono",monospace;font-size:13px;display:grid;grid-template-columns:auto 1fr auto;gap:6px 14px;margin-bottom:64px;padding:20px 0;border-top:1px dashed var(--rule);border-bottom:1px dashed var(--rule)}
+  .toc .num{color:var(--rust)}
+  .toc .dots{color:var(--rule);overflow:hidden;white-space:nowrap}
+  .toc a{color:var(--ink);text-decoration:none}
+  .toc a:hover{color:var(--rust)}
+  /* PHASES */
+  .phase{margin:0 0 72px;position:relative}
+  .phase-head{display:flex;align-items:baseline;gap:18px;margin-bottom:8px;border-bottom:1px solid var(--ink);padding-bottom:10px}
+  .phase-num{font-family:"JetBrains Mono",monospace;font-size:14px;color:var(--rust);letter-spacing:.15em;font-weight:600;flex-shrink:0}
+  .phase-num::before{content:"PHASE "}
+  h2{font-family:"Fraunces",serif;font-weight:600;font-size:32px;margin:0;line-height:1.1;letter-spacing:-.01em}
+  .phase-why{font-style:italic;color:var(--ink-soft);margin:14px 0 22px;font-size:17px}
+  /* STEPS */
+  ol.steps{list-style:none;counter-reset:step;padding:0;margin:0}
+  ol.steps > li{counter-increment:step;position:relative;padding:14px 0 14px 52px;border-bottom:1px dashed var(--rule)}
+  ol.steps > li:last-child{border-bottom:none}
+  ol.steps > li::before{
+    content:counter(step,decimal-leading-zero);
+    position:absolute;left:0;top:14px;
+    font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:600;
+    color:var(--ink);background:var(--highlight);
+    padding:3px 8px;border-radius:2px;letter-spacing:.05em;
+  }
+  ol.steps strong.title{font-family:"Fraunces",serif;font-weight:600;font-size:19px;display:block;margin-bottom:4px;color:var(--ink)}
+  ol.steps small{display:block;margin-top:6px;color:var(--ink-soft);font-size:15px;font-style:italic}
+  /* CALLOUTS */
+  .callout{margin:22px 0;padding:18px 22px;border:1.5px solid var(--ink);background:var(--paper);position:relative}
+  .callout::before{
+    content:attr(data-label);
+    position:absolute;top:-11px;left:16px;
+    background:var(--paper);padding:0 8px;
+    font-family:"JetBrains Mono",monospace;font-size:11px;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--ink);
+  }
+  .callout.critical{border-color:var(--rust);background:#fbeee6}
+  .callout.critical::before{color:var(--rust);background:#fbeee6}
+  /* CODE */
+  code{font-family:"JetBrains Mono",monospace;font-size:.85em;background:var(--paper-deep);padding:2px 6px;border-radius:2px;color:var(--ink)}
+  pre{background:var(--code-bg);color:var(--code-fg);padding:16px 18px;border-radius:3px;overflow-x:auto;font-family:"JetBrains Mono",monospace;font-size:13px;line-height:1.6;margin:14px 0;border-left:3px solid var(--rust)}
+  pre code{background:none;padding:0;color:inherit}
+  /* LINKS */
+  a{color:var(--rust);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:var(--rust-soft)}
+  a:hover{text-decoration-thickness:2px}
+  /* BONUS / FOOTER */
+  .bonus{margin-top:64px;padding:28px 28px 24px;background:var(--ink);color:var(--paper);border-radius:2px;position:relative;overflow:hidden}
+  .bonus::before{
+    content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(45deg, transparent 0 8px, rgba(168,68,42,.06) 8px 9px);
+    pointer-events:none;
+  }
+  .bonus h2{color:var(--paper);position:relative}
+  .bonus .phase-num{color:var(--rust-soft);position:relative}
+  .bonus .phase-num::before{content:""}
+  .bonus .phase-head{border-bottom-color:var(--rust-soft);position:relative}
+  .bonus p,.bonus li{position:relative;color:var(--paper)}
+  .bonus ul{padding-left:20px}
+  .bonus ul li{margin-bottom:10px}
+  .bonus a{color:var(--rust-soft);text-decoration-color:var(--rust)}
+  .bonus code{background:rgba(243,236,217,.1);color:var(--paper)}
+  /* LINKS BLOCK */
+  .links{margin-top:48px;padding-top:32px;border-top:2px solid var(--ink)}
+  .links h3{font-family:"Fraunces",serif;font-weight:600;font-size:22px;margin:0 0 16px;letter-spacing:-.01em}
+  .links ul{list-style:none;padding:0;margin:0;font-family:"JetBrains Mono",monospace;font-size:13px}
+  .links li{padding:8px 0;border-bottom:1px dashed var(--rule);display:grid;grid-template-columns:140px 1fr;gap:18px;align-items:baseline}
+  .links li span{color:var(--rust);letter-spacing:.05em}
+  /* FOOTER COLOPHON */
+  footer{margin-top:64px;text-align:center;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-soft);letter-spacing:.18em;text-transform:uppercase}
+  footer .rule{width:60px;height:1px;background:var(--ink-soft);margin:0 auto 16px}
+  /* RESPONSIVE */
+  @media (max-width:560px){
+    .wrap{padding:40px 18px 64px}
+    .stamp{position:static;display:inline-block;margin-bottom:16px;transform:none}
+    .links li{grid-template-columns:1fr}
+    ol.steps > li{padding-left:42px}
+  }
+  @media print{
+    body{background:#fff}
+    .bonus{background:#fff;color:#000;border:2px solid #000}
+    .bonus h2,.bonus p,.bonus li{color:#000}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="stamp">Ref<br>v.01<br>2026</div>
+  <div class="eyebrow">A personal field guide · entry level</div>
+  <h1>How to <em>vibe code</em> &mdash;<br>without losing the plot.</h1>
+  <p class="lede">A workflow for shipping AI-assisted projects with Codex, Claude, Cursor, and the GSD repo — using a tailored scaffold so every CLI finds the same context.</p>
+</header>
+
+<aside class="disclaimer">
+  <strong>One way, not the only way.</strong>
+  This is the workflow I'm currently using to keep AI coding projects on the rails. Treat it as a starting point — swap, skip, or rearrange anything that doesn't serve your project. The point is having <em>a</em> process, not following <em>this</em> process.
+</aside>
+
+<nav class="toc">
+  <span class="num">00</span> <span class="dots">··· Setup ··················································</span> <a href="#p0">one-time prep</a>
+  <span class="num">01</span> <span class="dots">··· Ideate ·················································</span> <a href="#p1">brainstorm</a>
+  <span class="num">02</span> <span class="dots">··· Bootstrap ·············································</span> <a href="#p2">pre-seed scaffold</a>
+  <span class="num">03</span> <span class="dots">··· Land it ················································</span> <a href="#p3">on your machine</a>
+  <span class="num">04</span> <span class="dots">··· Orient ·················································</span> <a href="#p4">read everything</a>
+  <span class="num">05</span> <span class="dots">··· GSD ····················································</span> <a href="#p5">install + init</a>
+  <span class="num">06</span> <span class="dots">··· Loop ···················································</span> <a href="#p6">plan, build, ship</a>
+  <span class="num">★</span>  <span class="dots">··· Bonus ··················································</span> <a href="#bonus">level it up</a>
+</nav>
+
+<!-- PHASE 0 -->
+<section class="phase" id="p0">
+  <div class="phase-head"><div class="phase-num">00</div><h2>Setup (do this once)</h2></div>
+  <p class="phase-why">Get the boring stuff out of the way so future-you can move fast.</p>
+  <ol class="steps">
+    <li>
+      <strong class="title">Install an AI CLI tool.</strong>
+      Pick at least one — Codex, Claude Code, or both. If you'll use GSD with Codex, your Codex CLI must be <code>0.130.0</code> or newer (older versions cause duplicate skill listings).
+      <small>You can run multiple CLIs on the same project; just keep one driver per branch at a time.</small>
+    </li>
+    <li>
+      <strong class="title">Set up Git.</strong>
+      A GitHub account (personal or company) gives you a rolling cloud backup. Pure local git works too — it's better than nothing. Follow GitHub's official setup: <a href="https://docs.github.com/en/get-started/git-basics/set-up-git">docs.github.com/en/get-started/git-basics/set-up-git</a>.
+      <small>Commit early, commit often. Git is the only memory layer your AI can't lose.</small>
+    </li>
+    <li>
+      <strong class="title">Save your templates somewhere you can grab them.</strong>
+      Your scaffold <code>.zip</code> and your <code>prompt-handoff.md</code>. Same place every time — Desktop, Drive, a dotfiles repo.
+      <small>The scaffold encodes how every CLI will read your project. Reuse it.</small>
+    </li>
+  </ol>
+</section>
+
+<!-- PHASE 1 -->
+<section class="phase" id="p1">
+  <div class="phase-head"><div class="phase-num">01</div><h2>Ideate. Get it out of your head.</h2></div>
+  <p class="phase-why">The idea is messy in your head. Make it messy on a page first, so the AI has something to work with.</p>
+  <ol class="steps">
+    <li>
+      <strong class="title">Open any general chat AI</strong> (Claude.ai, ChatGPT, anything). Talk through your idea until you have a clear picture: what it does, who it's for, what v1 must include, what's <em>out</em> of scope.
+    </li>
+    <li>
+      <strong class="title">Ask for a structured write-up.</strong>
+      Tell it to produce a single markdown document: one-liner, problem, audience, must-haves, nice-to-haves, constraints, and explicit non-goals. Save it as <code>idea.md</code>.
+      <small>This is your <em>idea document</em>. It's what you'll feed the bootstrap step next — different from the <code>handoff.md</code> inside the scaffold, which tracks state between sessions.</small>
+    </li>
+  </ol>
+</section>
+
+<!-- PHASE 2 -->
+<section class="phase" id="p2">
+  <div class="phase-head"><div class="phase-num">02</div><h2>Bootstrap. Pre-seed the scaffold.</h2></div>
+  <p class="phase-why">Take your idea + a blank scaffold and let the AI fill in the planning docs before any code exists.</p>
+  <ol class="steps">
+    <li>
+      <strong class="title">Start a fresh chat session.</strong>
+      Attach three things: (a) the scaffold zip, (b) your <code>idea.md</code>, (c) paste <code>prompt-handoff.md</code> as your first message.
+    </li>
+    <li>
+      <strong class="title">Let the AI inspect and ask.</strong>
+      It should first prove it read the scaffold (the prompt forces this), then ask a tight round of clarifying questions — stack, v1 scope, GSD mode, which CLIs you'll use.
+    </li>
+    <li>
+      <strong class="title">Answer, then let it populate.</strong>
+      It fills in <code>AGENTS.md</code>, the planning docs, the first feature spec, and the GSD-mode decision (ADR <code>0002</code>). Download the populated zip.
+    </li>
+  </ol>
+  <div class="callout" data-label="Heads up">
+    The scaffold uses <code>handoff.md</code> for cross-session state tracking — <em>not</em> for your idea. If GSD is installed, <code>STATE.md</code> at the project root takes over that role.
+  </div>
+</section>
+
+<!-- PHASE 3 -->
+<section class="phase" id="p3">
+  <div class="phase-head"><div class="phase-num">03</div><h2>Land it on your machine.</h2></div>
+  <p class="phase-why">From browser-zip to a real project folder you can build in.</p>
+  <ol class="steps">
+    <li>
+      <strong class="title">Unzip into a project folder.</strong>
+      Rename the top folder to your project name. Put it somewhere predictable — <code>~/code/</code>, <code>~/Projects/</code>, your call.
+    </li>
+    <li>
+      <strong class="title">Initialize git and push.</strong>
+      <pre><code>git init
+git add .
+git commit -m "scaffold: initial project structure"
+# then create a repo on GitHub and:
+git remote add origin &lt;your-repo-url&gt;
+git push -u origin main</code></pre>
+      <small>Now you have a snapshot to roll back to before you (or any AI) touches anything.</small>
+    </li>
+    <li>
+      <strong class="title">Open it in your editor + CLI.</strong>
+      VS Code, Cursor, whatever you use. Start your AI CLI in the same folder.
+    </li>
+  </ol>
+</section>
+
+<!-- PHASE 4 -->
+<section class="phase" id="p4">
+  <div class="phase-head"><div class="phase-num">04</div><h2>Orient. Read everything.</h2></div>
+  <p class="phase-why">Most "AI got confused" stories trace back to skipping this step.</p>
+  <div class="callout critical" data-label="Critical">
+    Before you ask the AI to build anything, have it read — and have <em>you</em> read — <code>AGENTS.md</code>, <code>README.md</code>, <code>external/GSD-INTEGRATION.md</code>, the seeded ADRs in <code>02-notes/decisions/</code>, and the handoff log. Understand how the pieces talk to each other. Five minutes here saves hours later.
+  </div>
+  <ol class="steps">
+    <li>
+      <strong class="title">Have the CLI summarize the scaffold back to you.</strong>
+      "Read AGENTS.md and the planning docs, then tell me in five bullets how this project is meant to be run." If the summary is wrong, fix the docs <em>before</em> coding.
+    </li>
+    <li>
+      <strong class="title">Lock in the GSD mode decision.</strong>
+      ADR <code>0002</code> has three checkboxes: GSD-led, docs-led + GSD execution, or no GSD yet. Pick one. Don't run <code>/gsd-new-project</code> until this is decided.
+    </li>
+  </ol>
+</section>
+
+<!-- PHASE 5 -->
+<section class="phase" id="p5">
+  <div class="phase-head"><div class="phase-num">05</div><h2>Install GSD (optional but recommended).</h2></div>
+  <p class="phase-why">GSD adds structured spec-driven workflow + subagent orchestration so long sessions don't fall apart from context rot.</p>
+  <ol class="steps">
+    <li>
+      <strong class="title">Install from the maintained fork.</strong>
+      Use the open-gsd version — not the legacy one.
+      <pre><code>npx @opengsd/get-shit-done-redux@latest</code></pre>
+      <small>Repo: <a href="https://github.com/open-gsd/get-shit-done-redux">github.com/open-gsd/get-shit-done-redux</a> · The original upstream had a trust incident; the open-gsd team maintains the current version.</small>
+    </li>
+    <li>
+      <strong class="title">Restart your CLI.</strong>
+      Required, every time, for the new commands and skills to register.
+    </li>
+    <li>
+      <strong class="title">Kick off the project.</strong>
+      <pre><code># bringing GSD to a fresh project:
+/gsd-new-project
+
+# bringing GSD to an existing codebase:
+/gsd-map-codebase
+/gsd-new-project</code></pre>
+      <small>If you chose <em>GSD-led</em> mode, expect <code>AGENTS.md</code>, <code>PROJECT.md</code>, <code>REQUIREMENTS.md</code>, <code>ROADMAP.md</code>, and <code>STATE.md</code> to be written or rewritten by GSD at the project root.</small>
+    </li>
+  </ol>
+</section>
+
+<!-- PHASE 6 -->
+<section class="phase" id="p6">
+  <div class="phase-head"><div class="phase-num">06</div><h2>Build the loop. Ship in small steps.</h2></div>
+  <p class="phase-why">With GSD, every cycle is the same six beats. Without GSD, the rhythm is the same — just hand-driven through the planning docs.</p>
+  <ol class="steps">
+    <li>
+      <strong class="title">Plan the phase.</strong>
+      With GSD: <code>/gsd-discuss-phase 1</code> then <code>/gsd-plan-phase 1</code>. Without: write the spec in <code>01-features/&lt;name&gt;/</code> before any code.
+    </li>
+    <li>
+      <strong class="title">Execute.</strong>
+      <code>/gsd-execute-phase 1</code> — runs in parallel subagent waves, atomic commits per task. Without GSD: prompt your CLI against the spec, one focused change at a time.
+    </li>
+    <li>
+      <strong class="title">Verify.</strong>
+      <code>/gsd-verify-work 1</code>, or manual acceptance against your spec. Code that <em>runs</em> is not code that <em>works</em>.
+    </li>
+    <li>
+      <strong class="title">Ship and update the baton.</strong>
+      <code>/gsd-ship 1</code> or commit + open a PR. Then update the handoff log (or let GSD update <code>STATE.md</code>) so the next session — yours or another CLI — picks up clean.
+    </li>
+    <li>
+      <strong class="title">When confused, ask in a fresh session.</strong>
+      "How does this scaffold work?" or "What does <code>external/GSD-INTEGRATION.md</code> say I should do next?" A new session with the right context beats a long one with rotted context.
+    </li>
+  </ol>
+  <div class="callout" data-label="Multi-CLI rule">
+    One driver per branch. Don't run Codex and Claude editing the same files at the same time. Commit before switching tools, update the handoff log, then hand off.
+  </div>
+</section>
+
+<!-- BONUS -->
+<section class="phase bonus" id="bonus">
+  <div class="phase-head"><div class="phase-num">★ Bonus</div><h2>Level it up.</h2></div>
+  <p class="phase-why">Once the basic loop feels comfortable, these turn it up a notch.</p>
+  <ul>
+    <li><strong>Brainstorming skills during planning.</strong> Plugins like the <em>Superpowers</em> collection add a dedicated brainstorming skill that pairs well with the GSD planning step — it pushes you to consider edge cases and alternatives before the plan locks in.</li>
+    <li><strong>Match the model to the task.</strong> Use your highest-reasoning model (e.g. GPT-5.5, Claude Opus) during planning and verification — these steps are where deep thinking pays off. Switch to a faster, cheaper model for execution; that step is mostly mechanical once the plan is solid.</li>
+    <li><strong>Git worktrees for true parallel runs.</strong> If you really do need two CLIs working at once, give each its own branch via <code>git worktree</code> instead of fighting over the same files.</li>
+    <li><strong>Keep an ADR habit.</strong> Every real tradeoff goes in <code>02-notes/decisions/</code>. Future-you (and every AI session) needs to know <em>why</em>, not just <em>what</em>.</li>
+  </ul>
+</section>
+
+<!-- LINKS -->
+<section class="links">
+  <h3>Useful references</h3>
+  <ul>
+    <li><span>GSD Redux</span> <a href="https://github.com/open-gsd/get-shit-done-redux">github.com/open-gsd/get-shit-done-redux</a></li>
+    <li><span>Git setup</span> <a href="https://docs.github.com/en/get-started/git-basics/set-up-git">docs.github.com — set up git</a></li>
+    <li><span>Codex docs</span> <a href="https://developers.openai.com/codex">developers.openai.com/codex</a></li>
+    <li><span>Claude Code</span> <a href="https://docs.claude.com">docs.claude.com</a></li>
+    <li><span>Obsidian</span> <a href="https://obsidian.md">obsidian.md (point at your project folder)</a></li>
+  </ul>
+</section>
+
+<footer>
+  <div class="rule"></div>
+  · personal reference · one way of many ·
+</footer>
+
+</div>
+</body>
+</html>
