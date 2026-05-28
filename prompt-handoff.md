@@ -41,10 +41,58 @@ multiple AI coding tools (e.g. Codex + Claude Code, possibly GSD on top). I've a
 - Keep it to one focused batch of questions. Don't proceed past this until I answer
   (unless my write-up already answers everything, in which case state your assumptions
   and continue).
+- **Record the answers.** Once I've replied, save what was decided (and why) in
+  `02-notes/decisions/0002-project-kickoff-answers.md` before populating anything else.
+  The next agent sees the populated files but not this chat — the answers are durable
+  context worth keeping.
 
 ## Step 3 — Populate the scaffold
+
+### 3a — Preserve every substantial chat artifact in the repo first
+**Do this before filling in any planning docs.** The chat is ephemeral; the repo is not.
+Anything produced in our conversation that the project needs forever must land in the
+repo now — before the chat ends. If our conversation has produced any of the following,
+copy them into the scaffold in the folders GSD does not touch:
+
+- **Long-form plans, strategy docs, research write-ups, architectural deep-dives** →
+  `02-notes/research/<descriptive-name>.md`.
+  Then create or update `02-notes/research/README.md` to index them: one line per file,
+  what it is, and when to read it.
+
+- **Working prototype code or proofs-of-concept that have been run and verified** →
+  `external/_reference/prototypes/<name>/`.
+  Include any rendered proof artifacts (screenshots, sample outputs). Add a `README.md`
+  inside that folder explaining what it is, what was proven, and the porting plan into
+  `src/` for the relevant phase. (These are vendored per `AGENTS.md §7` — untouchable,
+  but explicitly referenced.)
+
+- **Reusable patterns, framework references, or exemplar templates** (e.g. skill
+  framework docs, plugin interface specs, prompt patterns, exemplar `SKILL.md` files) →
+  framework doc in `02-notes/research/<name>.md`; example files in
+  `external/_reference/prototypes/<name>-exemplars/` with a README.
+
+- **Architectural decisions with rationale** → write or expand the relevant ADR in
+  `02-notes/decisions/`. ADRs must include the *reasoning and tradeoffs*, not just
+  the decision text. "We chose X" is incomplete; "We chose X over Y because Z, tradeoff
+  is W" is a durable ADR.
+
+Then **update `AGENTS.md` §3** to list these as named durable-context anchors with their
+exact paths. GSD may rewrite `AGENTS.md`, but when it does, these anchors survive in the
+files themselves — and a well-seeded §3 gives the next agent (or a GSD rewrite) a map to
+find them. Example entry for §3:
+
+```
+### Durable-context anchors (GSD-safe locations)
+- `02-notes/research/execution-strategy.md` — master project strategy + pipeline design
+- `02-notes/research/skill-framework.md` — skill authoring patterns + exemplars
+- `external/_reference/prototypes/poc-v1/` — verified proof-of-concept code + port plan
+- `02-notes/decisions/` — all load-bearing architectural decisions with rationale
+```
+
+### 3b — Fill in the planning docs
 Using my idea + answers, fill in the placeholders/TODOs. Specifically:
-- **`AGENTS.md`** §1 (what we're building), §2 (tech stack), §6 (commands), §7 (don't touch).
+- **`AGENTS.md`** §1 (what we're building), §2 (tech stack), §3 (durable-context anchors
+  per 3a above), §6 (commands), §7 (don't touch).
   This is the single source of truth — get it right; everything else points here.
 - **`00-planning/vision.md`** — one-liner, problem, who it's for, success signals, non-goals.
 - **`00-planning/requirements.md`** — must-haves for v1, nice-to-haves, constraints.
@@ -63,7 +111,9 @@ Using my idea + answers, fill in the placeholders/TODOs. Specifically:
   that contradict it — those files only point back to `AGENTS.md`.
 - **Don't write application code yet.** This step is planning only. Leave `src/`, `tests/`
   empty except their READMEs unless I ask.
-- **Don't edit `external/`** contents — that's vendored.
+- **Don't edit `external/`** contents — that's vendored. Exception: you MAY create new
+  folders under `external/_reference/prototypes/` in Step 3a to preserve chat artifacts;
+  that's adding, not editing existing vendored content.
 - Keep everything as plain markdown (it must stay Obsidian-readable and CLI-readable).
 - Don't invent scope. Where my idea is silent and it's not blocking, make a reasonable
   assumption and **mark it clearly** so I can correct it.
@@ -72,6 +122,19 @@ Using my idea + answers, fill in the placeholders/TODOs. Specifically:
 - Re-zip the populated scaffold and give it back to me as a download.
 - Give me a short "what I filled in / what I assumed / what's still open" summary.
 - End with the exact first 1–3 commands or actions to start Phase 1 in my chosen CLI.
+- **Sanity check before zipping — does the repo contain the full plan?** If a future
+  agent opened this scaffold cold with no chat history, could they reconstruct *why* every
+  major decision was made and *what* was already built? Verify each of the following; if
+  any answer is "no," go back and fix it before delivering:
+  - Is there a master long-form plan or strategy doc in `02-notes/research/`, indexed by
+    a `README.md`?
+  - Are working prototypes or verified PoC code preserved in
+    `external/_reference/prototypes/` with a port plan?
+  - Do ADRs in `02-notes/decisions/` include reasoning and tradeoffs per decision, not
+    just the decision assertion?
+  - Does `AGENTS.md` §3 explicitly name these durable-context anchors by path?
+  - Is `02-notes/decisions/0002-project-kickoff-answers.md` present with the key
+    decisions from Step 2?
 
 ---
 
